@@ -2,6 +2,7 @@
 from socket import *
 # In order to terminate the program
 import sys
+import os
 # Import thread module, datetime for timestamp
 import threading
 import datetime
@@ -11,6 +12,8 @@ webserverName = "149.125.156.149"
 webserverPort = 5002
 proxyserverPort = 5003
 proxyserverAddress = "149.125.156.149"
+
+cachePath = "ProxyServer"
 
 class myThread (threading.Thread):
    def __init__(self, connectionSocket, proxyclientSocket):
@@ -33,22 +36,33 @@ def sendFile(connectionSocket, proxyclientSocket):
     while True:
         message = connectionSocket.recv(2048).decode()
         filename = message.split()[1]
+        if os.path.exists(os.path.join(cachePath, filename[1:])):
+            with open(os.path.join(cachePath, filename[1:]), 'r') as f:
+                modifiedSentence = f.read()
+            connectionSocket.send(("HTTP/1.1 200 OK\r\n\r\n" + modifiedSentence + "\r\n").encode())
+            print("proxy-forward, Client, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
+        
+        else:
 
-        #Start connecting top webserver
-        proxyclientSocket = socket(AF_INET, SOCK_STREAM)
-        proxyclientSocket.connect((webserverName,webserverPort))
+            #Start connecting top webserver
+            proxyclientSocket = socket(AF_INET, SOCK_STREAM)
+            proxyclientSocket.connect((webserverName,webserverPort))
             
-        #Send the filename to Web Server
-        sentence = "GET " + filename + " HTTP/1.1"
-        proxyclientSocket.send(sentence.encode())
-        print("proxy-forward, Server, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
-        time.sleep(0.03)
-        #Receive from Web Server and close the connection with web server
-        modifiedSentence = proxyclientSocket.recv(2048).decode()
-        proxyclientSocket.close()
+            #Send the filename to Web Server
+            sentence = "GET " + filename + " HTTP/1.1"
+            proxyclientSocket.send(sentence.encode())
+            print("proxy-forward, Server, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
+            time.sleep(0.03)
 
-        connectionSocket.send(modifiedSentence.encode())
-        print("proxy-forward, Client, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
+            #Receive from Web Server and close the connection with web server
+            modifiedSentence = proxyclientSocket.recv(2048).decode()
+            proxyclientSocket.close()
+            if not os.path.exists(os.path.join(cachePath, filename[1:])):
+                with open(os.path.join(cachePath, filename[1:]), 'w') as f:
+                    f.write(modifiedSentence[15:])
+
+            connectionSocket.send(modifiedSentence.encode())
+            print("proxy-forward, Client, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
         return
 
     # Close client socket

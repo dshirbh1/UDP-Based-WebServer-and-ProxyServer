@@ -8,22 +8,21 @@ import threading
 import datetime
 
 class myThread (threading.Thread):
-   def __init__(self, threadID, connectionSocket):
+   def __init__(self, connectionSocket):
       threading.Thread.__init__(self)
-      self.threadID = threadID
       self.socket = connectionSocket
 
    def run(self):
       # Get lock to synchronize threads
       threadLock.acquire()
-      sendFile(self.socket, self.threadID)
+      sendFile(self.socket)
       # Free lock to release next thread
       threadLock.release()
 
 threadLock = threading.Lock()
 threads = list()
 # thread function
-def sendFile(connectionSocket,threadID):
+def sendFile(connectionSocket):
     while True:
         try:
             message = connectionSocket.recv(2048).decode()
@@ -45,7 +44,7 @@ def sendFile(connectionSocket,threadID):
                     current_page += 1
                 # Send one HTTP header line into socket with data
                 connectionSocket.send(("HTTP/1.1 200 OK\r\n\r\n" + whole_text + "\r\n").encode())
-                print("server-response, 200 OK, " + str(threadID) + ", " +  str(datetime.datetime.now()))
+                print("server-response, 200 OK, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
             
             if filename.endswith("html"):
                 f = open(filename[1:])
@@ -54,13 +53,13 @@ def sendFile(connectionSocket,threadID):
 
                 # Send one HTTP header line into socket
                 connectionSocket.send(("HTTP/1.1 200 OK\r\n\r\n" + outputdata + "\r\n").encode())
-                print("server-response, 200 OK, " + str(threadID) + ", " +  str(datetime.datetime.now()))
+                print("server-response, 200 OK, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
             return
 
         except IOError:
             # Send response message for file not found
             connectionSocket.send("HTTP/1.1 404 Not Found\r\n\r\n File not found \r\n".encode())
-            print("server-response, 404 Not Found, " + str(threadID) + ", " +  str(datetime.datetime.now()))
+            print("server-response, 404 Not Found, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
             return
 
     # Close client socket
@@ -71,17 +70,15 @@ if __name__ == '__main__':
     serverSocket = socket(AF_INET, SOCK_STREAM)
 
     serverPort = 5002
-    serverAddress = "149.125.41.213"
+    serverAddress = "149.125.156.149"
     serverSocket.bind((serverAddress,serverPort))
     serverSocket.listen(1)
-    threadID = 1
     while True:
         # Establish the connection
         connectionSocket, addr = serverSocket.accept()
-        thread = myThread(threadID, connectionSocket)
+        thread = myThread(connectionSocket)
         thread.start()
         threads.append(thread)
-        threadID += 1
         #for t in threads:
             #t.join()
 
