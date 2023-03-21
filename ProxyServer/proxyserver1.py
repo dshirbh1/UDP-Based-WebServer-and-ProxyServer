@@ -6,11 +6,12 @@ import sys
 # Import thread module
 import threading
 import datetime
+import time
 
-webserverName = '149.125.41.213'
+webserverName = "149.125.156.149"
 webserverPort = 5002
 proxyserverPort = 5003
-proxyserverAddress = "149.125.41.213"
+proxyserverAddress = "149.125.45.38"
 
 class myThread (threading.Thread):
    def __init__(self, threadID, connectionSocket, proxyclientSocket):
@@ -42,14 +43,14 @@ def sendFile(connectionSocket, proxyclientSocket, threadID):
         #Send the filename to Web Server
         sentence = "GET " + filename + " HTTP/1.1"
         proxyclientSocket.send(sentence.encode())
-        print("proxy-forward, Server, " + str(threadID) + ", " +  str(datetime.datetime.now()))
-            
+        print("proxy-forward, Server, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
+        time.sleep(0.03)
         #Receive from Web Server and close the connection with web server
         modifiedSentence = proxyclientSocket.recv(2048).decode()
         proxyclientSocket.close()
 
         connectionSocket.send(modifiedSentence.encode())
-        print("proxy-forward, Client, " + str(threadID) + ", " +  str(datetime.datetime.now()))
+        print("proxy-forward, Client, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
         return
 
     # Close client socket
@@ -65,7 +66,7 @@ if __name__ == '__main__':
     while True:
         connectionSocket, addr = proxyserverSocket.accept()
         thread = myThread(threadID, connectionSocket, proxyserverSocket)
-        thread.start()
+        thread.start() #internal function of threading library
         threads.append(thread)
         threadID += 1
         #for t in threads:
