@@ -2,5 +2,6 @@
 
 for i in {1..10}
 do
-    curl "http://149.125.41.213:5003/home.html" &
+    #curl "http://192.168.1.103:5003/Project2-ProxyServer1.pdf" &
+    curl --output $i".html" "http://192.168.1.103:5003/Home.html" &
 done

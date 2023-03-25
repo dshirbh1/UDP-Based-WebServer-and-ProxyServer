@@ -7,10 +7,10 @@ import threading
 import datetime
 import time
 
-webserverName = "149.125.156.149"
+webserverName = "192.168.1.103"
 webserverPort = 5002
 proxyserverPort = 5003
-proxyserverAddress = "149.125.156.149"
+proxyserverAddress = "192.168.1.103"
 
 class myThread (threading.Thread):
    def __init__(self, connectionSocket, proxyclientSocket):
@@ -30,26 +30,25 @@ threads = list()
 
 # thread function
 def sendFile(connectionSocket, proxyclientSocket):
-    while True:
-        message = connectionSocket.recv(2048).decode()
-        filename = message.split()[1]
+    message = connectionSocket.recv(2048).decode()
+    filename = message.split()[1]
 
-        #Start connecting top webserver
-        proxyclientSocket = socket(AF_INET, SOCK_STREAM)
-        proxyclientSocket.connect((webserverName,webserverPort))
+    #Start connecting top webserver
+    proxyclientSocket = socket(AF_INET, SOCK_STREAM)
+    proxyclientSocket.connect((webserverName,webserverPort))
             
-        #Send the filename to Web Server
-        sentence = "GET " + filename + " HTTP/1.1"
-        proxyclientSocket.send(sentence.encode())
-        print("proxy-forward, Server, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
-        time.sleep(0.03)
-        #Receive from Web Server and close the connection with web server
-        modifiedSentence = proxyclientSocket.recv(2048).decode()
-        proxyclientSocket.close()
+    #Send the filename to Web Server
+    sentence = "GET " + filename + " HTTP/1.1"
+    proxyclientSocket.send(sentence.encode())
+    print("proxy-forward, Server, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
+    time.sleep(0.03)
 
-        connectionSocket.send(modifiedSentence.encode())
-        print("proxy-forward, Client, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
-        return
+    #Receive from Web Server and close the connection with web server
+    modifiedSentence = proxyclientSocket.recv(2048).decode()
+    proxyclientSocket.close()
+
+    connectionSocket.send(modifiedSentence.encode())
+    print("proxy-forward, Client, " + str(threading.get_ident()) + ", " +  str(datetime.datetime.now()))
 
     # Close client socket
     connectionSocket.close()
@@ -61,15 +60,18 @@ if __name__ == '__main__':
     proxyserverSocket.bind((proxyserverAddress,proxyserverPort))
     proxyserverSocket.listen(1)
     while True:
-        connectionSocket, addr = proxyserverSocket.accept()
-        thread = myThread(connectionSocket, proxyserverSocket)
-        thread.start() #internal function of threading library
-        threads.append(thread)
-    for t in threads:
-        t.join()
+        try:
+            connectionSocket, addr = proxyserverSocket.accept()
+            thread = myThread(connectionSocket, proxyserverSocket)
+            thread.start()
+            threads.append(thread)
+        except KeyboardInterrupt:
+            #Shutting down the threads before ending
+            for t in threads:
+                t.join()
+            break
 
     # Close server socket
-    serverSocket.close()
-
+    proxyserverSocket.close()
     # Terminate the program after sending the corresponding data
     sys.exit()
