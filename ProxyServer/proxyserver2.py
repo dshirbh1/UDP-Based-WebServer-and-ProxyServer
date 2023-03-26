@@ -88,7 +88,6 @@ def sendFile(connectionSocket, proxyclientSocket):
         proxyclientSocket.close()
 
         if not os.path.exists(os.path.join(cachePath, filename[1:])):
-            print(modifiedSentence[0:15])
             if "404 Not Found" not in modifiedSentence:
                 with open(os.path.join(cachePath, filename[1:]), 'w') as f:
                     f.write(modifiedSentence[15:])

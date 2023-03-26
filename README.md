@@ -20,16 +20,34 @@ saves the file in it's cache and then forwards it to client
 ### NOTES, KNOWN BUGS, AND/OR INCOMPLETE PARTS
 
 [Add any notes you have here and/or any parts of the project you were not able to complete]: #
+Sometimes, error "Connections refused by peer" occurs.
 
 ### REFERENCES
 
 [List any outside resources used]: 
 StackOverflow forums
 Medium Articles
+https://thispointer.com/python-get-difference-between-two-datetimes-in-seconds/
+https://stackoverflow.com/questions/29198122/how-to-write-proxy-program-for-resending-packets
 
 ### INSTRUCTIONS
 
 [Provide clear and complete step-by-step instructions on how to run and test your project]: #
+Part 1:
+1. Change the IP address and port number as per availability in webserver.py and proxyserver1.py
+2. Run webserver.py first and then proxyserver1.py. 
+3. Request a proxyserver's IP address and port using URL "http://Proxy_IP:Proxy_Port/File_Name".
+4. Client should receive a response and file content which is present in Web server, a print lines on proxyserver stating proxy-forward to server and then to client, a print line on web server stating the timestamp and response code sent to a proxy server.
+5. Same thing will happen for the 2nd request onwards.
+
+Part 2:
+1. Change the IP address and port number as per availability in webserver.py and proxyserver1.py
+2. Run webserver.py first and then proxyserver1.py. Make sure both files are in different folders.
+3. Request a proxyserver's IP address and port using URL "http://Proxy_IP:Proxy_Port/File_Name".
+4. Client should receive a response and file content which is present in Web server, a print lines on proxyserver stating proxy-forward to server and then to client, a print line on web server stating the timestamp and response code sent to a proxy server. Also, a file will be saved on proxyserver's folder which will be a caches file.
+5. For the next request of the same file withing 120 seconds, proxy will serve the client with file content and prints a line stating proxy-cache.
+6. A reqauest from client after 120 seconds will again sends this to web serveand follow steps 4 and 5.
+
 
 ### SUBMISSION
 
@@ -39,7 +57,7 @@ By signing my name below and submitting the project, I confirm the above stateme
 
 Submission date:
 
-Team member 1 name: Devashri Shirbhate
+Team member 1 name: Devashri Pramodrao Shirbhate
 
 Team member 2 name: Jay Balaram Sankhe
 
