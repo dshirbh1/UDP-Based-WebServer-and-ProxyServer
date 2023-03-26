@@ -39,6 +39,7 @@ Part 1:
 3. Request a proxyserver's IP address and port using URL "http://Proxy_IP:Proxy_Port/File_Name".
 4. Client should receive a response and file content which is present in Web server, a print lines on proxyserver stating proxy-forward to server and then to client, a print line on web server stating the timestamp and response code sent to a proxy server.
 5. Same thing will happen for the 2nd request onwards.
+6. Ctl+C will stop the webserver and proxy servers with properly closing the threads.
 
 Part 2:
 1. Change the IP address and port number as per availability in webserver.py and proxyserver1.py
@@ -47,6 +48,7 @@ Part 2:
 4. Client should receive a response and file content which is present in Web server, a print lines on proxyserver stating proxy-forward to server and then to client, a print line on web server stating the timestamp and response code sent to a proxy server. Also, a file will be saved on proxyserver's folder which will be a caches file.
 5. For the next request of the same file withing 120 seconds, proxy will serve the client with file content and prints a line stating proxy-cache.
 6. A reqauest from client after 120 seconds will again sends this to web serveand follow steps 4 and 5.
+7. Ctl+C will stop the webserver and proxy servers with properly closing the threads.
 
 
 ### SUBMISSION
