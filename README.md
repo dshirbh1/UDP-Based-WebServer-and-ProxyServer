@@ -1,15 +1,15 @@
-### Web Proxy Server
+# Web Proxy Server
 ## Overview
 Welcome to the "Web Proxy Server" project! This project demonstrates a web proxy server that enhances web communication between clients and web servers. This README provides an overview of the project's features, implementation, and usage.
 
 ## Project Description
 In this project, you will develop a web proxy server that serves as an intermediary between clients and web servers. The project is divided into two parts:
 
-# Part 1: Web Proxy Server
+### Part 1: Web Proxy Server
 The web proxy server forwards requests from clients to web servers and forwards responses from web servers back to clients.
 It prints informative log messages indicating request/response forwarding.
 The server also logs response status codes for debugging.
-# Part 2: Caching
+### Part 2: Caching
 The web proxy server caches web pages to improve performance.
 Cached responses older than 120 seconds are considered invalid and discarded.
 The proxy records the time when a new server response is cached.
@@ -25,9 +25,9 @@ Follow these steps to set up and use the web proxy server:
 Python environment with required libraries.
 
 ## Installation
-# Clone this repository to your local machine
-# Navigate to the project directory
-# Running the Proxy Server
+### Clone this repository to your local machine
+### Navigate to the project directory
+### Running the Proxy Server
 Execute the web proxy server (Part 1)
 Run the web server (Part 2)
 
@@ -40,7 +40,7 @@ Run the web server (Part 2)
 Please refer to the "Screenshots" directory for images of the project in action, including client, proxy server, and web server terminals, along with browser results.
 
 
-### SUMMARY
+## SUMMARY
 Two installments-
 Installment1
 Where a webserver and proxy server run and server request from client
@@ -55,11 +55,11 @@ if object exists, serves it directly to client
 If it does not, then forwards request to origin server, receives the response, 
 saves the file in it's cache and then forwards it to client
 
-### NOTES, KNOWN BUGS, AND/OR INCOMPLETE PARTS
+## NOTES, KNOWN BUGS, AND/OR INCOMPLETE PARTS
 
 Sometimes, error "Connections refused by peer" occurs.
 
-### REFERENCES
+## REFERENCES
 
 [List any outside resources used]: 
 StackOverflow forums
@@ -67,9 +67,9 @@ Medium Articles
 https://thispointer.com/python-get-difference-between-two-datetimes-in-seconds/
 https://stackoverflow.com/questions/29198122/how-to-write-proxy-program-for-resending-packets
 
-### INSTRUCTIONS
+## INSTRUCTIONS
 
-Part 1:
+### Part 1:
 1. Change the IP address and port number as per availability in webserver.py and proxyserver1.py
 2. Run webserver.py first and then proxyserver1.py. 
 3. Request a proxyserver's IP address and port using URL "http://Proxy_IP:Proxy_Port/File_Name".
@@ -77,7 +77,7 @@ Part 1:
 5. Same thing will happen for the 2nd request onwards.
 6. Ctl+C will stop the webserver and proxy servers with properly closing the threads.
 
-Part 2:
+### Part 2:
 1. Change the IP address and port number as per availability in webserver.py and proxyserver1.py
 2. Run webserver.py first and then proxyserver1.py. Make sure both files are in different folders.
 3. Request a proxyserver's IP address and port using URL "http://Proxy_IP:Proxy_Port/File_Name".
